@@ -1,0 +1,22 @@
+http://www.raspberry-pi-geek.com/Archive/2015/10/Raspberry-Pi-IR-remote
+This config is a guess: http://lirc.sourceforge.net/remotes/sony/RMT-V223
+http://raspberrypi.stackexchange.com/a/50017
+http://alexba.in/blog/2013/01/06/setting-up-lirc-on-the-raspberrypi/
+Set up port forwarding:
+https://www.xfinity.com/support/articles/port-forwarding-xfinity-wireless-gateway
+Port 22
+
+//React native web
+create-react-app dashboard
+cd_dashboard
+export HOST=0.0.0.0 (to run externally)
+
+// Install react-bootstrap https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-bootstrap
+npm install react-bootstrap --save
+npm install bootstrap@3 --save
+npm install jquery --save
+npm start
+
+// Node
+curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+sudo apt-get install -y nodejs
