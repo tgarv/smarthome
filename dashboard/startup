@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-
-# Start my node project
-cd /home/pi/projects/smart_home/dashboard/ && npm run start
