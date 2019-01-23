@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, jsonify
 import os
 import time
+import Adafruit_DHT
 app = Flask(__name__)
 
 @app.route("/")
@@ -84,3 +85,8 @@ def stereo_hdmi4():
 def bluetooth_audio():
     os.system("/usr/bin/irsend SEND_ONCE YAMAHA_RAV463 KEY_5")
     return "HDMI5"
+
+@app.route("/read_temp_humidity")
+def read_temp_humidity():
+    humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 24)
+    return jsonify({"temperature": temperature, "humidity": humidity})
