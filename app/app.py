@@ -106,5 +106,14 @@ def log_temperature_humidity():
     connection.commit()
     return str(cursor.lastrowid)
 
+@app.route("/get_temperature_humidity")
+def get_temperature_humidity():
+    room = request.args.get("room")
+    print room
+    connection = get_sql_connection()
+    cursor = connection.cursor()
+    cursor.execute('SELECT temperature, humidity, currentdate FROM temperature_humidity_log WHERE room=? ORDER BY ID DESC LIMIT 1', (room,))
+    return jsonify(cursor.fetchall())
+
 def get_sql_connection():
     return sqlite3.connect('/home/pi/projects/smart_home/sensordata.db')
