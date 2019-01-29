@@ -4,6 +4,7 @@ import time
 import Adafruit_DHT
 import json
 import datetime
+import sqlite3
 app = Flask(__name__)
 
 @app.route("/")
@@ -95,22 +96,15 @@ def read_temperature_humidity():
 
 @app.route("/log_temperature_humidity", methods=["GET", "POST"])
 def log_temperature_humidity():
+    connection = get_sql_connection()
+    cursor = connection.cursor()
     humidity = request.args.get("humidity")
     temperature = request.args.get("temperature")
     room = request.args.get("room")
     time = datetime.datetime.now()
-    new_data = {"temperature": temperature, "humidity": humidity, "room": room, "time": time.isoformat()}
-    with open("/home/pi/projects/smart_home/temp_humidity_log.txt", "r") as json_file:
-        try:
-            data = json.load(json_file)
-        except ValueError:
-            print "failed to load json data"
-            data = {"entries": []}
-        json_file.close()
-    with open("/home/pi/projects/smart_home/temp_humidity_log.txt", "w") as json_file: 
-        data["entries"].append(new_data)
-        json.dump(data, json_file)
-        json_file.close()
-    return jsonify({"entries": len(data["entries"])})
+    cursor.execute('INSERT INTO temperature_humidity_log (temperature, humidity, currentdate, room) VALUES (?, ?, ?, ?)', (temperature, humidity, time.isoformat(), room))
+    connection.commit()
+    return str(cursor.lastrowid)
 
-
+def get_sql_connection():
+    return sqlite3.connect('/home/pi/projects/smart_home/sensordata.db')
