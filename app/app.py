@@ -109,10 +109,20 @@ def log_temperature_humidity():
 @app.route("/get_temperature_humidity")
 def get_temperature_humidity():
     room = request.args.get("room")
-    print room
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
     connection = get_sql_connection()
     cursor = connection.cursor()
-    cursor.execute('SELECT temperature, humidity, currentdate FROM temperature_humidity_log WHERE room=? ORDER BY ID DESC LIMIT 1', (room,))
+    if start_date is not None and end_date is not None:
+        sql = 'SELECT room, temperature, humidity, currentdate FROM temperature_humidity_log WHERE (currentdate BETWEEN ? AND ?)'
+        parameters = [start_date, end_date]
+        if room is not None:
+            sql = sql + ' AND room=?'
+            parameters.append(room)
+        sql = sql + ' ORDER BY currentdate ASC'
+        cursor.execute(sql, parameters)
+    else:
+        cursor.execute('SELECT temperature, humidity, currentdate FROM temperature_humidity_log WHERE room=? ORDER BY ID DESC LIMIT 1', (room,))
     return jsonify(cursor.fetchall())
 
 def get_sql_connection():
